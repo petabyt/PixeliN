@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>PixeIiN</title>
+</head>
+<body>
+<div id="pixels" onmouseover="draw()" onmousedown="mousedown = true" onmouseup="mousedown = false">
+</div>
+<div id="color">
+	<center>
+		<input type="color" id='color1' onchange="color = document.getElementById('color1').value" title="Color" value="#0000ff">
+	</center>
+</div>
+</body>
+<style type="text/css">
+	#color {
+		float: left;
+	}
+	#color input {
+		border: transparent;
+		width: 100px;
+		height: 100px;
+		float: right;
+	}
+	#pixels {
+		width: 500px;
+		height: 500px;
+		border: 1px solid black;
+		display: table;
+		margin: 0;
+		float: left;
+	}
+	.pixel {
+		width: 50px;
+		height: 50px;
+		display: inline-block;
+		margin: 0px;
+		vertical-align: top;
+		box-sizing: border-box;
+		user-drag: none; 
+user-select: none;
+-moz-user-select: none;
+-webkit-user-drag: none;
+-webkit-user-select: none;
+-ms-user-select: none;
+	}
+	.pixel:hover {
+		border: 1px solid black;
+	}
+</style>
+<script type="text/javascript">
+var color = "#0000ff";
+var mousedown = false;
+var pixelnum = 1;
+for (var i = 0; i < 100; i++) {
+	document.getElementById('pixels').innerHTML += "<div onclick='pixel = this.id;draw()' onmouseover='pixel = this.id' class='pixel' id='pixel"+pixelnum+"'></div>";
+	pixelnum++
+}
+function draw() {
+	if (mousedown) {
+		document.getElementById(pixel).style.backgroundColor = color;
+	} else {
+		// No drawing
+	}
+}
+</script>
+</html>
