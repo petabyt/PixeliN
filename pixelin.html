@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>PixeIiN</title>
+	<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+	<script type="text/javascript" src="http://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+	<link rel="icon" type="image/png" href="favicon.png">
+	<style type="text/css">
+		fieldset {
+			height: 140px;
+			float: right;
+			margin-left: 20px;
+			visibility: hidden;
+		}
+		fieldset button {
+			margin-top: 10px;
+		}
+		canvas {
+			visibility: hidden;
+			position: absolute;
+		}
+		#color button {
+			width: 100px;
+		}
+		#color {
+			float: left;
+		}
+		#color input {
+			border: transparent;
+			width: 100px;
+			height: 100px;
+			float: right;
+		}
+		#pixels {
+			width: 500px;
+			height: 500px;
+			border: 1px solid black;
+			display: table;
+			margin: 0;
+			float: left;
+		}
+		.pixel {
+			width: 50px;
+			height: 50px;
+			display: inline-block;
+			margin: 0px;
+			vertical-align: top;
+			box-sizing: border-box;
+			user-drag: none; 
+			user-select: none;
+			/* Following code from CSS-TRICKS*/
+			-moz-user-select: none;
+			-webkit-user-drag: none;
+			-webkit-user-select: none;
+			-ms-user-select: none;
+		}
+		.pixel:hover {
+			border: .1px solid black;
+		}
+</style>
+</head>
+<body>
+<div id="pixels" onmouseover="draw()" onmousedown="mousedown = true" onmouseup="mousedown = false">
+</div>
+<div id="color">
+		<input type="color" id='color1' onchange="color = document.getElementById('color1').value" title="Color" value="#FFFFFF">
+		<br>
+		<button onclick="document.getElementById('saveDialogue').style.visibility = 'visible';">Save</button>
+		<br>
+		<button onclick="load()">Load</button>
+		<br>
+		<button onclick="sensecolor()">Sense</button>
+		<br>
+		<button onclick="clear1()">Clear</button>
+</div>
+<fieldset id="saveDialogue">
+	<legend>Save as...</legend>
+	<center>
+		<div style="float: left; margin-left: 50px;">
+			<button onclick="save()">Save as .pxn</button>
+			<br>
+			This file format allows you to <br> open the image back up in PixeliN again later.
+		</div>
+		<div style="float: right; margin-right: 50px;">
+			<button onclick="save1()">Save as .png</button>
+			<br>
+			Download this file format if you want to use <br> the image on the computer or the web.
+		</div>
+		<br>
+		<button onclick="document.getElementById('saveDialogue').style.visibility = 'hidden';">Cancel</button>
+	</center>
+</fieldset>
+</body>
+<script type="text/javascript">
+var sense = false;
+var sensec;
+var color = "rgb(255, 255, 255)";
+var mousedown = false;
+var pixelnum = 1;
+for (var i = 0; i < 100; i++) {
+	document.getElementById('pixels').innerHTML += "<div onclick='if (sense) {sensec = this; sensedone();} else {document.getElementById(this.id).style.backgroundColor = color;}' onmouseover='pixel = this.id' class='pixel' id='pixel"+pixelnum+"' style='background-color:green;'></div>";
+	pixelnum++
+}
+function draw() {
+	if (mousedown) {
+		document.getElementById(pixel).style.backgroundColor = color;
+	} else {
+		// No drawing
+	}
+}
+function sensecolor() {
+	sense = true;
+	alert("Click on a pixel to get its color.");
+}
+function sensedone() {
+	document.getElementById('color1').value = rgb2hex(document.getElementById(sensec.id).style.backgroundColor);
+	color = rgb2hex(document.getElementById(sensec.id).style.backgroundColor);
+	sense = false;
+}
+function save() {
+var filename = prompt("Please enter your file name.");
+var result = "";
+for (var i = 1; i < 101; i++) {
+	result += document.getElementById("pixel" + i).style.backgroundColor = "@";
+}
+download(filename+".pxn",result);
+}
+function save1() {
+var filename = prompt("Please enter your file name.");
+html2canvas(document.querySelector("#pixels")).then(canvas => {
+    document.body.appendChild(canvas);
+    var c = document.getElementsByTagName('canvas')[0]
+	var d=c.toDataURL("image/png");
+	var w=window.open('about:blank','image from canvas');
+	w.document.write("<a href='"+d+"' download='"+filename+".png'>Download</a><script>document.getElementsByTagName('a')[0].click();setTimeout(function() {window.close();},100)<"+"/"+"script>");
+});
+}
+function load() {
+	var imagecode = prompt("Please enter your image code.");
+	loadfile(imagecode)
+}
+function loadfile(code) {
+	var list = code.split('@');
+	for (var i = 1; i < 101; i++) {
+		document.getElementById("pixel" + i).style.backgroundColor = list[i];
+	}
+}
+function clear1() {
+	for (var i = 1; i < 101; i++) {
+		document.getElementById("pixel" + i).style.backgroundColor = "rgb(255, 255, 255)";
+	}
+}
+// Function to download files
+function download(filename, text) {
+		  var element = document.createElement('a');
+		  element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+		  element.setAttribute('download', filename);
+		  element.style.display = 'none';
+		  document.body.appendChild(element);
+		  element.click();
+		  document.body.removeChild(element);
+}
+// Code from Mottie (https://jsfiddle.net/user/Mottie/fiddles/)
+function rgb2hex(rgb){
+ rgb = rgb.match(/^rgba?[\s+]?\([\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?/i);
+ return (rgb && rgb.length === 4) ? "#" +
+  ("0" + parseInt(rgb[1],10).toString(16)).slice(-2) +
+  ("0" + parseInt(rgb[2],10).toString(16)).slice(-2) +
+  ("0" + parseInt(rgb[3],10).toString(16)).slice(-2) : '';
+}
+// Demo Picture
+loadfile("@rgb(0, 187, 187)@rgb(145, 255, 255)@rgb(206, 255, 255)@rgb(206, 255, 255)@rgb(206, 255, 255)@rgb(206, 255, 255)@rgb(206, 255, 255)@rgb(206, 255, 255)@rgb(145, 255, 255)@rgb(0, 187, 187)@rgb(145, 255, 255)@rgb(0, 187, 187)@rgb(145, 255, 255)@rgb(206, 255, 255)@rgb(206, 255, 255)@rgb(206, 255, 255)@rgb(206, 255, 255)@rgb(145, 255, 255)@rgb(0, 187, 187)@rgb(145, 255, 255)@rgb(206, 255, 255)@rgb(145, 255, 255)@rgb(0, 187, 187)@rgb(0, 155, 155)@rgb(145, 255, 255)@rgb(145, 255, 255)@rgb(0, 155, 155)@rgb(0, 187, 187)@rgb(145, 255, 255)@rgb(206, 255, 255)@rgb(206, 255, 255)@rgb(206, 255, 255)@rgb(0, 155, 155)@rgb(0, 255, 255)@rgb(0, 155, 155)@rgb(0, 155, 155)@rgb(0, 255, 255)@rgb(0, 155, 155)@rgb(206, 255, 255)@rgb(206, 255, 255)@rgb(206, 255, 255)@rgb(206, 255, 255)@rgb(145, 255, 255)@rgb(0, 155, 155)@rgb(0, 255, 255)@rgb(0, 255, 255)@rgb(0, 155, 155)@rgb(145, 255, 255)@rgb(206, 255, 255)@rgb(206, 255, 255)@rgb(206, 255, 255)@rgb(206, 255, 255)@rgb(145, 255, 255)@rgb(0, 155, 155)@rgb(0, 255, 255)@rgb(0, 255, 255)@rgb(0, 155, 155)@rgb(145, 255, 255)@rgb(206, 255, 255)@rgb(206, 255, 255)@rgb(206, 255, 255)@rgb(206, 255, 255)@rgb(0, 155, 155)@rgb(0, 255, 255)@rgb(0, 155, 155)@rgb(0, 155, 155)@rgb(0, 255, 255)@rgb(0, 155, 155)@rgb(206, 255, 255)@rgb(206, 255, 255)@rgb(206, 255, 255)@rgb(145, 255, 255)@rgb(0, 187, 187)@rgb(0, 155, 155)@rgb(145, 255, 255)@rgb(145, 255, 255)@rgb(0, 155, 155)@rgb(0, 187, 187)@rgb(145, 255, 255)@rgb(206, 255, 255)@rgb(145, 255, 255)@rgb(0, 187, 187)@rgb(145, 255, 255)@rgb(206, 255, 255)@rgb(206, 255, 255)@rgb(206, 255, 255)@rgb(206, 255, 255)@rgb(145, 255, 255)@rgb(0, 187, 187)@rgb(145, 255, 255)@rgb(0, 187, 187)@rgb(145, 255, 255)@rgb(206, 255, 255)@rgb(206, 255, 255)@rgb(206, 255, 255)@rgb(206, 255, 255)@rgb(206, 255, 255)@rgb(206, 255, 255)@rgb(145, 255, 255)@rgb(0, 187, 187)");
+</script>
+</html>
