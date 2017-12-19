@@ -121,7 +121,7 @@ function save() {
 var filename = prompt("Please enter your file name.");
 var result = "";
 for (var i = 1; i < 101; i++) {
-	result += document.getElementById("pixel" + i).style.backgroundColor = "@";
+	result += document.getElementById("pixel" + i).style.backgroundColor + "@";
 }
 download(filename+".pxn",result);
 }
