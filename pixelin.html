@@ -1,0 +1,95 @@
+<!-- 
+Compatable on:
+Chrome
+Firefox
+Has Issues:
+Microsoft Edge - Saving files not working
+Not Working At All:
+Internet Explorer
+ -->
+<!DOCTYPE html>
+<html>
+<head>
+	<title>PixeIiN</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" type="text/css" href="style.css">
+	<script type="text/javascript" src="javascript.js"></script>
+	<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+	<script type="text/javascript" src="html2canvas.js"></script>
+	<link rel="icon" type="image/png" href="favicon.png">
+</head>
+<body onload="dostuffs()">
+<div id="pixels" onmouseover="draw()" onmousedown="mousedown = true" onmouseup="mousedown = false">
+
+</div>
+<div id="color">
+		<input type="color" id='color1' onchange="color = document.getElementById('color1').value" title="Color" value="#000000">
+		<br>
+		<button onclick="undo1()">Undo</button>
+		<br>
+		<button onclick="redo()">Redo</button>
+		<br>
+		<button onclick="document.getElementById('saveDialogue').style.display = 'block';">Save</button>
+		<br>
+		<button onclick="load()">Load</button>
+		<br>
+		<button onclick="sensecolor()">Scan Color</button>
+		<br>
+		<button onclick="document.getElementById('gallery').style.display = 'block';">Gallery</button>
+		<br>
+		<button onclick="clear1()">Clear</button>
+</div>
+<div id="messages">
+	<center>
+		<h1>Messages:</h1>
+		<fieldset id="welcome">
+			<legend>Welcome to PixeliN!</legend>
+			<center>
+				<p>
+					Welcome to PixeliN! Feel free to take a look at the picture gallery, or make one yourself!
+				</p>
+				<button onclick="document.getElementById('welcome').style.display = 'none';">Dismiss</button>
+			</center>
+		</fieldset>
+		<fieldset id="saveDialogue">
+			<legend>Save as... (not working on Microsoft Edge)</legend>
+			<center>
+				<div style="float: left; margin-left: 1%;">
+					<button onclick="save()">Save as .pxn</button>
+					<br>
+					This file format allows you to <br> open the image back up in PixeliN again later.
+				</div>
+				<div style="float: right; margin-right: 1%;">
+					<button onclick="save1()">Save as .png</button>
+					<br>
+					Download this file format if you want to use <br> the image on the computer or the web.
+				</div>
+				<br style="font-size: 70px;">
+				<button onclick="document.getElementById('saveDialogue').style.display = 'none';">Cancel</button>
+			</center>
+		</fieldset>
+		<fieldset id="gallery">
+			<legend>Gallery</legend>
+			<center>
+				<img src="pictures/pokeball.png" onclick="loadfile(pokeball)" width="40">
+				<img src="pictures/landscape2.png" onclick="loadfile(landscape2)" width="40">
+				<img src="pictures/heart.png" onclick="loadfile(heart)" width="40">
+				<img src="pictures/landscape.png" onclick="loadfile(landscape)" width="40">
+				<br>
+				<button onclick="document.getElementById('gallery').style.display = 'none';">Cancel</button>
+			</center>
+		</fieldset>
+	</center>
+</div>
+<div id="frames">
+	<div id="frame" frame-data="" title="Click here to view this frame.">
+		<span>
+			1
+		</span>
+	</div>
+</div>
+<input accept=".pxn" id="file" style="visibility:hidden;position:absolute;" type='file' onchange='onChooseFile(event, onFileLoad.bind(this))' />
+<span id="temp"></span>
+</body>
+</html>
